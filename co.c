@@ -55,6 +55,27 @@ static void co_node_insert(struct co* coroutine) {
     }
 }
 
+/*
+ * 如果当前只剩node一个，则返回这个
+ * 否则，拉去当前co_node对应的协程，并沿着next方向移动
+ */
+static CoNode* co_node_remove() {
+    CoNode* victim = NULL;
+    if (co_node == NULL) {
+        return NULL;
+    } else if (co_node->next == co_node) {
+        victim = co_node;
+        co_node = NULL;
+    } else {
+        victim = co_node;   // 拿走当前协程
+        
+        co_node = co_node->prev;
+        co_node->next = victim->next;
+        co_node->next->prev = co_node;
+    }
+    return victim;
+}
+
 struct co* co_start(const char *name, void (*func)(void *), void *arg) {
     struct co* new_co = (struct co*)malloc(sizeof(struct co));  // 创建新协程
     
