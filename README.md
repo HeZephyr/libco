@@ -11,7 +11,7 @@
 
 下面是一个协程使用的例子，创建了两个(永不结束的)协程，分别打印a和b。由于co_yield()之后切换到的协程是随机的(可能切换到它自己)，因此可能会看到随机的ab交替出现的序列，例如ababba…
 
-'''c
+```c
 #include <stdio.h>
 #include "co.h"
 
@@ -28,4 +28,4 @@ int main() {
     co_wait(co1); // never returns
     co_wait(co2);
 }
-'''
+```
